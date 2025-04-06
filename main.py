@@ -1,18 +1,19 @@
+import os
 from fastapi import FastAPI, Query
-from pydantic import BaseModel
 import pandas as pd
 import numpy as np
 import faiss
 from openai import OpenAI
 from dotenv import load_dotenv
 
+# Load environment variables from .env (optional locally)
 load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
 
 app = FastAPI()
-client = OpenAI(api_key)
+client = OpenAI(api_key=api_key)
 
-# --- Load data ---
+# --- Load data and build FAISS index ---
 df = pd.read_csv("data/shl_with_embeddings.csv")
 df["openai_embedding"] = df["openai_embedding"].apply(eval)
 embedding_matrix = np.vstack(df["openai_embedding"].values).astype("float32")
@@ -40,3 +41,8 @@ def recommend_assessments(query: str = Query(...), top_k: int = 5):
     ]].copy()
 
     return results.to_dict(orient="records")
+
+# --- For local run or Render start command ---
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="0.0.0.0", port=8000)
