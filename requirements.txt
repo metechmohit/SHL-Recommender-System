@@ -1,0 +1,10 @@
+openai ==1.70.0
+faiss-cpu==1.10.0
+pandas==2.2.3
+numpy==2.2.4
+streamlit==1.44.1
+selenium==4.31.0
+beautifulsoup4==4.13.3
+fastapi==0.115.12
+uvicorn==0.34.0
+dotenv
