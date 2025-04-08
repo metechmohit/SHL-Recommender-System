@@ -4,7 +4,6 @@ import numpy as np
 import faiss
 from openai import OpenAI
 
-# --- Load data and FAISS index ---
 @st.cache_resource
 def load_data():
     df = pd.read_csv("data/shl_with_embeddings.csv")
@@ -18,7 +17,6 @@ def load_data():
 
 df, index = load_data()
 
-# --- OpenAI Setup ---
 
 OPENAI_API_KEY = st.secrets["key"]
 client = OpenAI(api_key=OPENAI_API_KEY)
@@ -28,7 +26,6 @@ def get_openai_embedding(text, model="text-embedding-3-small"):
     response = client.embeddings.create(input=[text], model=model)
     return np.array(response.data[0].embedding).astype("float32").reshape(1, -1)
 
-# --- Streamlit UI ---
 st.title("🔍 SHL Assessment Recommender")
 
 query = st.text_input("Enter a job description or test requirement:")
