@@ -3,10 +3,11 @@
 A semantic search-powered recommendation engine for SHL assessments. Users can enter natural language queries (like job descriptions), and the system returns relevant assessments from SHL’s catalog based on OpenAI embeddings and FAISS vector search.
 
 ---
-## Code for Scraping/ Collection of SHL product catalog with Selenum and bs4 is in [catalog_scraping.py](https://metechmohit.github.io/shl-recommendation-frontened/)
-## Code for generating embeddings of Assessments Description is in [preprocess_embeddings.py](https://metechmohit.github.io/shl-recommendation-frontened/)
-## Code for Endpoint creation is in [main.py](https://metechmohit.github.io/shl-recommendation-frontened/)
-## Code for streamlit app is in [app.py](https://metechmohit.github.io/shl-recommendation-frontened/)
+## Files
+- Code for Scraping/ Collection of SHL product catalog with Selenum and bs4 is in [catalog_scraping.py](https://github.com/metechmohit/SHL-Recommender-System/blob/master/catalog_scraping.py)
+-  Code for generating embeddings of Assessments Description is in [preprocess_embeddings.py](https://github.com/metechmohit/SHL-Recommender-System/blob/master/preprocess_embeddings.py)
+- Code for Endpoint creation is in [main.py](https://github.com/metechmohit/SHL-Recommender-System/blob/master/main.py)
+- Code for streamlit app is in [app.py](https://github.com/metechmohit/SHL-Recommender-System/blob/master/app.py)
 ---
 
 ##  Live Demo Links
