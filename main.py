@@ -54,7 +54,6 @@ def recommend_assessments(query: str = Query(...), top_k: int = 5):
 def root():
     return {"message": "SHL Assessment API is running. Use /recommend endpoint."}
 
-# --- For local run or Render start command ---
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=8000)
