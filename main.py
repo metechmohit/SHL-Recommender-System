@@ -7,14 +7,12 @@ from openai import OpenAI
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
 
-# Load environment variables from .env (if running locally)
 load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
 
 app = FastAPI()
 
-# --- Enable CORS Middleware ---
-# Allow all origins, methods, and headers (for development)
+# Allow all origins for endpoint testing in SHL
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],             # In production, specify allowed origins
@@ -23,10 +21,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- Initialize OpenAI client ---
 client = OpenAI(api_key=api_key)
 
-# --- Load data and build FAISS index ---
 df = pd.read_csv("data/shl_with_embeddings.csv")
 df["openai_embedding"] = df["openai_embedding"].apply(eval)
 embedding_matrix = np.vstack(df["openai_embedding"].values).astype("float32")
@@ -34,14 +30,12 @@ faiss.normalize_L2(embedding_matrix)
 index = faiss.IndexFlatIP(embedding_matrix.shape[1])
 index.add(embedding_matrix)
 
-# --- Embedding helper ---
 def get_openai_embedding(text, model="text-embedding-3-small"):
     # Pre-process the text by replacing newlines
     text = text.replace("\n", " ")
     response = client.embeddings.create(input=[text], model=model)
     return np.array(response.data[0].embedding).astype("float32").reshape(1, -1)
 
-# --- API Endpoint ---
 @app.get("/recommend")
 def recommend_assessments(query: str = Query(...), top_k: int = 5):
     query_vec = get_openai_embedding(query)
