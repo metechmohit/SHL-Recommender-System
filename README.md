@@ -3,11 +3,19 @@
 A semantic search-powered recommendation engine for SHL assessments. Users can enter natural language queries (like job descriptions), and the system returns relevant assessments from SHL’s catalog based on OpenAI embeddings and FAISS vector search.
 
 ---
+## Code for Scraping/ Collection of SHL product catalog with Selenum and bs4 is in [catalog_scraping.py](https://metechmohit.github.io/shl-recommendation-frontened/)
+## Code for generating embeddings of Assessments Description is in [preprocess_embeddings.py](https://metechmohit.github.io/shl-recommendation-frontened/)
+## Code for Endpoint creation is in [main.py](https://metechmohit.github.io/shl-recommendation-frontened/)
+## Code for streamlit app is in [app.py](https://metechmohit.github.io/shl-recommendation-frontened/)
+---
 
 ##  Live Demo Links
 
-- **Streamlit App** (UI): [ Try on Streamlit](https://shl-assessments-recommender.streamlit.app/)
-- **FastAPI Backend** (API): [ Try on Render](https://shl-recommender-system.onrender.com/docs)
+- **Deployed_frontend** (UI): [ For frontend](https://metechmohit.github.io/shl-recommendation-frontened/)
+- **Streamlit App** (UI): [ Try on Streamlit](https://shl-assessments-recommender.streamlit.app/) ## Needs to wake up
+- **FastAPI Swagger** (API): https://shl-recommender-system.onrender.com/docs    (Pass query param as search requirement)
+- **Endpoint_eg.** https://shl-recommender-system.onrender.com/recommend?query=Assessment%20for%20entry%20level%20managers
+- Change the param  query
 
 ---
 
@@ -16,8 +24,7 @@ A semantic search-powered recommendation engine for SHL assessments. Users can e
 -  Real-time search using OpenAI’s `text-embedding-3-small`
 -  Instant top-k assessment recommendations via FAISS
 -  API-first architecture with FastAPI
--  Streamlit-based UI for demo/testing
--  Publicly deployed with Render (API) & Streamlit Cloud (frontend)
+-  Publicly deployed endpoint with Render (API) & Streamlit or frotnend deployment
 
 ---
 
