@@ -13,7 +13,7 @@ A semantic search-powered recommendation engine for SHL assessments. Users can e
 ##  Live Demo Links
 
 - **Deployed_frontend** (UI): [ For frontend](https://metechmohit.github.io/shl-recommendation-frontened/)
-- **Streamlit App** (UI): [ Try on Streamlit](https://shl-assessments-recommender.streamlit.app/) ## Needs to wake up
+- **Streamlit App** (UI): [ Try on Streamlit]([https://shl-assessments-recommender.streamlit.app/](https://huggingface.co/spaces/mohitsingheng/SHL-Assessment-Recommender) ## Needs to wake up
 - **FastAPI Swagger** (API): https://shl-recommender-system.onrender.com/docs    (Pass query param as search requirement)
 - **Endpoint_eg.** https://shl-recommender-system.onrender.com/recommend?query=Assessment%20for%20entry%20level%20managers
 - Change the param  query
