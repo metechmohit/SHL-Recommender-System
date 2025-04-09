@@ -37,50 +37,44 @@ def get_openai_embedding(text, model="text-embedding-3-small"):
     response = client.embeddings.create(input=[text], model=model)
     return np.array(response.data[0].embedding).astype("float32").reshape(1, -1)
 
-# @app.get("/recommend")
-# def recommend_assessments(query: str = Query(...), top_k: int = 5):
-#     query_vec = get_openai_embedding(query)
-#     faiss.normalize_L2(query_vec)
-#     scores, indices = index.search(query_vec, top_k)
-    
-#     results = df.iloc[indices[0]][[
-#         "Assessment Name", "Assessment URL",
-#         "Remote Testing Support", "Adaptive/IRT Support",
-#         "Time", "Test Type Keys"
-#     ]].copy()
-
-#     return results.to_dict(orient="records")
-
 @app.get("/recommend")
-def recommend_assessments(
-    query: str = Query(...),
-    min_score: float = Query(0.7, ge=0.0, le=1.0)
-):
+def recommend_assessments(query: str = Query(...), top_k: int = 8):
     query_vec = get_openai_embedding(query)
     faiss.normalize_L2(query_vec)
+    scores, indices = index.search(query_vec, top_k)
     
-    # Search top 20 for buffer, we’ll filter manually
-    scores, indices = index.search(query_vec, 20)
+    results = df.iloc[indices[0]][[
+        "Assessment Name", "Assessment URL",
+        "Remote Testing Support", "Adaptive/IRT Support",
+        "Time", "Test Type Keys"
+    ]].copy()
 
-    results = []
-    for score, idx in zip(scores[0], indices[0]):
-        if score >= min_score:
-            item = df.iloc[idx][[
-                "Assessment Name", "Assessment URL",
-                "Remote Testing Support", "Adaptive/IRT Support",
-                "Time", "Test Type Keys"
-            ]].to_dict()
-            item["Score"] = round(float(score), 3)
-            results.append(item)
+    return results.to_dict(orient="records")
 
-    results = results[:10]
+# Threshold check could also be implemented on calculated embeddings relevance score 
 
-    if not results:
-        raise HTTPException(status_code=404, detail="No relevant assessments found. Try broadening your query.")
-
-    return results
-
-
+# @app.get("/recommend")
+# def recommend_assessments(
+#     query: str = Query(...),
+#     min_score: float = Query(0.7, ge=0.0, le=1.0)
+# ):
+#     query_vec = get_openai_embedding(query)
+#     faiss.normalize_L2(query_vec)
+#     scores, indices = index.search(query_vec, 20)
+#     results = []
+#     for score, idx in zip(scores[0], indices[0]):
+#         if score >= min_score:
+#             item = df.iloc[idx][[
+#                 "Assessment Name", "Assessment URL",
+#                 "Remote Testing Support", "Adaptive/IRT Support",
+#                 "Time", "Test Type Keys"
+#             ]].to_dict()
+#             item["Score"] = round(float(score), 3)
+#             results.append(item)
+#     results = results[:10]
+#     if not results:
+#         raise HTTPException(status_code=404, detail="No relevant assessments found. Try broadening your query.")
+#     return results
 
 @app.get("/")
 def root():
