@@ -76,7 +76,7 @@ def recommend_assessments(payload: QueryRequest):
 
     results = []
     for score, idx in zip(scores[0], indices[0]):
-        if score >= 0.7:  # Apply score threshold
+        if score >= 0.4:  # Apply score threshold
             row = df.iloc[idx]
             try:
                 duration = int(row["Time"].split()[0])
