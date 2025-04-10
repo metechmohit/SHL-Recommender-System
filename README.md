@@ -33,7 +33,8 @@ A semantic search-powered recommendation engine for SHL assessments. Users can e
 - **Streamlit UI**: [Launch Streamlit](https://huggingface.co/spaces/mohitsingheng/SHL-Assessment-Recommender) *(click to wake up if idle)*
 - **FastAPI Docs (Swagger UI)**: [View Swagger](https://shl-recommender-system.onrender.com/docs)
 - **Sample API Endpoint**:  
-  [https://shl-recommender-system.onrender.com/recommend?query=Assessment%20for%20entry%20level%20managers](https://shl-recommender-system.onrender.com/recommend?query=Assessment%20for%20entry%20level%20managers)
+  - Health Check Endpoint: [https://shl-recommender-system.onrender.com/health](https://shl-recommender-system.onrender.com/health)
+  - Assessment Recommendation Endpoint: [https://shl-recommender-system.onrender.com/recommend](https://shl-recommender-system.onrender.com/recommend)
 
 > You can customize the `query` parameter for different use cases.
 
