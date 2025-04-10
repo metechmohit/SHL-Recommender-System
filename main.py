@@ -1,5 +1,6 @@
 import os
 import re
+import uvicorn
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import pandas as pd
@@ -76,7 +77,7 @@ def recommend_assessments(payload: QueryRequest):
 
     results = []
     for score, idx in zip(scores[0], indices[0]):
-        if score >= 0.4:  # Apply score threshold
+        if score >= 0.35:  # Apply score threshold
             row = df.iloc[idx]
             try:
                 duration = int(row["Time"].split()[0])
@@ -98,5 +99,4 @@ def recommend_assessments(payload: QueryRequest):
     return {"recommended_assessments": results[:10]}
 
 if __name__ == "__main__":
-    import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=8000)
