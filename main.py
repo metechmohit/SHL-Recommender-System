@@ -2,6 +2,7 @@ import os
 import re
 import uvicorn
 from fastapi import FastAPI, HTTPException
+from fastapi import Query
 from pydantic import BaseModel
 import pandas as pd
 import numpy as np
@@ -65,38 +66,50 @@ def parse_duration(duration_str):
     match = re.search(r"\d+", str(duration_str)) #to extract only integer from df["Time"]
     return int(match.group()) if match else 0
     
-# recommend endpoint
-@app.post("/recommend", response_model=RecommendationResponse)
-def recommend_assessments(payload: QueryRequest):
+# recommend endpoint (for testing and frontend)
+@app.post("/recommend")
+def recommend_assessments(
+    payload: QueryRequest,
+    frontend: bool = Query(False, description="Set true to return frontend-friendly format")
+):
     query = payload.query
     query_vec = get_openai_embedding(query)
     faiss.normalize_L2(query_vec)
 
-    # Search top 20 candidates (filter later)
     scores, indices = index.search(query_vec, 20)
-
     results = []
-    for score, idx in zip(scores[0], indices[0]):
-        if score >= 0.35:  # Apply score threshold
-            row = df.iloc[idx]
-            try:
-                duration = int(row["Time"].split()[0])
-            except:
-                duration = 0  # fallback
 
-            results.append({
-                "url": row["Assessment URL"],
-                "adaptive_support": row["Adaptive/IRT Support"],
-                "description": row["Description"].split("|")[0].strip(),  # before job levels/lang
-                "duration": parse_duration(row["Time"]),
-                "remote_support": row["Remote Testing Support"],
-                "test_type": [t.strip() for t in row["Test Type Keys"].split(",")]
-            })
+    for score, idx in zip(scores[0], indices[0]):
+        if score >= 0.35:
+            row = df.iloc[idx]
+
+            if frontend:
+                results.append({
+                    "Assessment Name": row["Assessment Name"],
+                    "Assessment URL": row["Assessment URL"],
+                    "Description": row["Description"].split("|")[0].strip(),
+                    "Time": row["Time"],  
+                    "Remote Testing Support": row["Remote Testing Support"],
+                    "Adaptive/IRT Support": row["Adaptive/IRT Support"],
+                    "Test Type Keys": row["Test Type Keys"]
+                })
+            else:
+                results.append({
+                    "url": row["Assessment URL"],
+                    "adaptive_support": row["Adaptive/IRT Support"],
+                    "description": row["Description"].split("|")[0].strip(),
+                    "duration": parse_duration(row["Time"]),  #for int only
+                    "remote_support": row["Remote Testing Support"],
+                    "test_type": [t.strip() for t in row["Test Type Keys"].split(",")]
+                })
 
     if not results:
         raise HTTPException(status_code=404, detail="No relevant assessments found.")
 
-    return {"recommended_assessments": results[:10]}
+    if frontend:
+        return results[:10]
+    else:
+        return {"recommended_assessments": results[:10]}
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000)
